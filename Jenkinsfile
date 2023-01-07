@@ -35,7 +35,7 @@ pipeline {
         }
         stage('Apply Terraform Plan') {
             when {
-                branch 'master'
+                branch 'main'
             } 
             steps {
                 sh label: 'Apply Terraform plan changes', script: 'make apply'
@@ -43,7 +43,7 @@ pipeline {
         }
         stage('Integration Tests') {
             when {
-                branch 'master'
+                branch 'main'
             }
             steps {
                 sleep(time:30, unit:"SECONDS") // Wait 30 seconds for DDNS daemon set to register new address, if applicable.
@@ -52,8 +52,8 @@ pipeline {
         }
         stage('Update Gated Pipeline') {
             when {
-                allOf { // Submit PR to gated environment pipeline when commit/merge to master branch is prefixed with [PROMOTE]
-                    branch 'master'
+                allOf { // Submit PR to gated environment pipeline when commit/merge to main branch is prefixed with [PROMOTE]
+                    branch 'main'
                     changelog '^\\[PROMOTE\\] .+$'
                 }
             }
@@ -82,7 +82,7 @@ pipeline {
             }
             post {
                 cleanup {
-                    sh label: 'Revert to local master branch', script: 'git checkout master'
+                    sh label: 'Revert to local main branch', script: 'git checkout main'
                     sh label: 'Delete local scoreboard branch', script: 'git branch -D scoreboard'
                     sh label: 'Remove git config', script: 'rm .git/config'
                     sh label: 'Remove gated repo clone', script: 'rm -rf gated/'
@@ -103,7 +103,7 @@ pipeline {
                      description: 'All tests passed',
                      targetUrl: "${env.BUILD_URL}/display/redirect")
 
-                    // Attempt to auto-merge this PR into master unless the 'no-merge' label exists to indicate otherwise.
+                    // Attempt to auto-merge this PR into main unless the 'no-merge' label exists to indicate otherwise.
                     if (! pullRequest.labels.contains("no-merge")) {
                         echo "No-merge label absent; attempting auto-merge."
 

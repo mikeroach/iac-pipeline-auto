@@ -12,6 +12,6 @@ This [Terraform HCL](./main.tf) is effectively a wrapper to deploy a specific ve
 #### Changes Workflow
 
 1. Human or application pipeline updates Terraform HCL/variables in feature branch and submits pull request.
-1. Jenkins examines pull request, runs Terraform validation tests, then merges into master upon success.
-1. Jenkins examines master branch, repeats validation tests, applies Terraform plan in the live environment, and runs integration tests.
+1. Jenkins examines pull request, runs Terraform validation tests, then merges into `main` upon success.
+1. Jenkins examines `main` branch, repeats validation tests, applies Terraform plan in the live environment, and runs integration tests.
 1. (Optional) If tests succeed and the Git commit message contains the magic word ```[PROMOTE]```, submit an upgrade request to the [gated environment](https://github.com/mikeroach/iac-pipeline-gated) via that repository's [GitOps Helper script](https://github.com/mikeroach/iac-pipeline-gated/gitops-helper.sh).
